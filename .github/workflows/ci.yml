@@ -12,28 +12,23 @@ jobs:
     with:
       engine: cruby
       # versions: ["debug"]
-      min_version: 2.7
+      min_version: 3.3
 
   host:
     needs: ruby-versions
     name: ${{ matrix.os }} ${{ matrix.ruby }}
-    if: ${{ github.repository == 'ruby/digest' || github.event_name != 'schedule' }}
+    if: ${{ github.event_name != 'schedule' }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:
         - ubuntu-22.04
-        - ubuntu-20.04
-        - macos-13
-        - macos-12
         - windows-latest
         ruby: ${{ fromJson(needs.ruby-versions.outputs.versions) }}
         include:
         - { os: windows-latest, ruby: ucrt }
         - { os: windows-latest, ruby: mswin }
-        - { os: ubuntu-20.04,   ruby: jruby }
-        - { os: ubuntu-20.04,   ruby: jruby-head }
         exclude:
         - { os: windows-latest, ruby: debug }
         - { os: windows-latest, ruby: head }
@@ -62,5 +57,4 @@ jobs:
           ${{
           matrix.ignore-pkg-error ||
           (matrix.ruby == 'debug') ||
-          startsWith(matrix.os, 'windows') ||
           false }}
