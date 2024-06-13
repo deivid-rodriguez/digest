@@ -44,6 +44,17 @@ jobs:
 
       - run: ruby --version
 
+      - name: Clone rubygems/rubygems#7743
+        uses: actions/checkout@v4
+        with:
+          repository: rubygems/rubygems
+          ref: deivid-rodriguez/another-sort-stability-issue
+          path: rubygems
+
+      - name: Install ruybygems/rubygems#7743
+        run: ruby setup.rb
+        working-directory: rubygems
+
       - run: bundle exec rake compile
 
       - run: bundle exec rake build
